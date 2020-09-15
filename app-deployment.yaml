@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: springboot
+spec:
+  selector:
+    matchLabels:
+      app: springboot
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: springboot
+    spec:
+      containers:
+      - image: senthilkumar2709/myservicenew3:part9
+        name: springboot
+        ports:
+        - containerPort: 8080
+          name: server
+        env:
+        # optional
+        - name: RDS_HOSTNAME
+          value: "mydb.c5zmhbvenvcz.ap-south-1.rds.amazonaws.com"
+        - name: RDS_PORT
+          value: "3306"
+        - name: RDS_DB_NAME
+          value: "demo"
+        - name: RDS_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: rds
+              key: username
+        - name: RDS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: rds
+              key: password
+      restartPolicy: Always
+status: {}
